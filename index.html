@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>铜川山水田园项目GIS平台</title>
+<style type="text/css">
+ html, body,#mapid {
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow:hidden;
+            background-image:url("images/mapimage/瓦片地图.png");
+            padding:0px;
+            margin:0px;
+            
+        }
+</style>
+ <link rel="stylesheet" href="widget/css/Map.css">
+ <link rel="stylesheet" href="widget/css/header.css">
+ <link rel="stylesheet" href="plugins/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+ <link rel="stylesheet"
+		href="http://113.140.66.230:18101/arcgis_js_v323_api/arcgis_js_api/library/3.23/3.23/dijit/themes/claro/claro.css"/>
+	<link rel="stylesheet"
+		href="http://113.140.66.230:18101/arcgis_js_v323_api/arcgis_js_api/library/3.23/3.23/esri/css/esri.css"/>
+	<link rel="stylesheet"
+		href="http://113.140.66.230:18101/arcgis_js_v323_api/arcgis_js_api/library/3.23/3.23/dijit/themes/soria/soria.css"/>
+     <link rel="stylesheet"
+		href="plugins/layui/css/layui.css"/>
+    <script type="text/javascript">
+    var root = location.href.slice(0, location.href.lastIndexOf('/'));
+        dojoConfig = {
+            parseOnLoad: true,
+            packages: [
+            {
+                name: "widget",
+                location: root+"/widget"
+            }
+            ]
+        }
+    </script>
+    
+  <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+  <script src="plugins/layui/layui.js"></script>
+  <script type="text/javascript" src="plugins/ztree/jquery.ztree.all.min.js"></script>
+  <script type="text/javascript" src="http://113.140.66.230:18101/arcgis_js_v323_api/arcgis_js_api/library/3.23/3.23/init.js"></script>
+ 
+</head>
+<body>
+ <div id="mapid">
+ </div>
+ <div id=header>
+    <div class="banner"></div>
+	<ul class="nav">
+		<a href="#">服装</a>
+		<ul class="plat">
+			<li><a href="#">衬衫</a></li>
+			<li><a href="#">棉袄</a></li>
+			<li><a href="#">裤衩</a></li>
+		</ul>
+	</ul>
+	<ul class="nav">
+		<a href="#">服装</a>
+		<ul class="plat">
+			<li><a href="#">衬衫</a></li>
+			<li><a href="#">棉袄</a></li>
+			<li><a href="#">裤衩</a></li>
+		</ul>
+	</ul>
+	<ul class="nav">
+		<a href="#">服装</a>
+		<ul class="plat">
+			<li><a href="#">衬衫</a></li>
+			<li><a href="#">棉袄</a></li>
+			<li><a href="#">裤衩</a></li>
+		</ul>
+	</ul>
+</div>
+ <div id=maptools>
+     <li class="tool" id="ZoomIn">放大</li>
+     <li class="tool" id="ZoomOut">缩小</li>
+     <li class="tool" id="Pan">平移</li>
+     <li class="tool" id="DrawPoint">绘点</li>
+     <li class="tool" id="DrawLine">测线</li>
+     <li class="tool" id="DrawPolygon">测面</li>  
+     <li class="tool" id="MapExtent">全图</li>
+     <li class="tool" id="MapClear">清空</li>  
+ </div>
+ <div id="layerSwitch" >
+      <li class="layerimage" id="xzqClick">行政区划</li>
+      <li class="layerimage" id="imageClick">影像图</li>
+      <li class="layerimage" id="dxClick">地形图</li>
+      <li class="layerimage" id="skcClick">时空影像</li>
+      <li class="layerimage" id="maplinkClick">影像对比</li>
+ </div>
+ <div id="layerTree" class ="ztree"></div>
+ <div id="xyinfor"></div>
+ <div id="timeInfo" style="visibility:hidden">
+    <span id="timeSp">时间轴</span>
+    <div id="labelText">当前影像时间：2013年</div>
+    <div id="timeSliderDiv"></div>
+ </div>
+
+ <script type="text/javascript">
+ $(function () {
+	 intMap();
+	 mapresize();
+	 $(".close").click(()=>{
+    	 let tempLayer= MapAppconfig.map._layers["templayerid"];
+			 tempLayer.clear();
+    })
+    
+	
+ });
+ let intMap=function(){
+	 require([
+	          "esri/map",
+	          "esri/layers/ArcGISDynamicMapServiceLayer",
+	          "esri/geometry/Extent",
+	          "esri/SpatialReference",
+	          "esri/layers/ArcGISTiledMapServiceLayer",
+	          "esri/layers/GraphicsLayer",
+	          "widget/MapAppconfig",
+	          "dojo/promise/all",
+	          "dojo/_base/lang",
+	          "esri/geometry/Point",
+	          "esri/dijit/InfoWindow",
+	          "dojo/dom-construct",
+	          "dojo/on",
+	          "dojo/dom",
+	          "esri/symbols/SimpleLineSymbol",
+	          "esri/Color",
+	          "esri/graphic",
+	          "esri/symbols/SimpleMarkerSymbol",
+	          "esri/InfoTemplate",
+	          ],function(Map,
+	        		  ArcGISDynamicMapServiceLayer,
+	        		  Extent, SpatialReference,
+	        		  ArcGISTiledMapServiceLayer,
+	        		  GraphicsLayer,
+	        		  MapAppconfig,
+	        		  all,
+	        		  lang,
+	        		  Point,
+	        		  InfoWindow,
+	        		  domConstruct,
+	        		  on,
+	        		  dom,
+	        		  SimpleLineSymbol,
+	        		  Color,
+	        		  Graphic,
+	        		  SimpleMarkerSymbol,
+	        		  InfoTemplate
+	        		  ){
+		
+		   let mapExtnt = Extent(
+				   MapAppconfig.mapExtent.xmin,
+				   MapAppconfig.mapExtent.ymin,
+				   MapAppconfig.mapExtent.xmax,
+				   MapAppconfig.mapExtent.ymax,
+	             new SpatialReference(MapAppconfig.mapExtent.wkid)
+	         );
+	
+	         let map = new Map("mapid", {
+	             logo: false ,//logo
+	             isZoomSlider:false,
+	             extent:mapExtnt,
+	     
+	         });
+	             MapAppconfig.map=map;
+	             MapAppconfig.mapExtnt=mapExtnt;
+	        	 let tiled = new ArcGISTiledMapServiceLayer(MapAppconfig.sssl);
+		         tiled.id="ssslid";
+		         map.addLayer(tiled);
+		         
+		         tiled = new ArcGISTiledMapServiceLayer(MapAppconfig.ssslbz);
+		         tiled.id="ssslbzid";
+		         map.addLayer(tiled); 
+		     
+		         tiled = new ArcGISDynamicMapServiceLayer(MapAppconfig.ssym);
+		         tiled.id="ssymid";
+		         map.addLayer(tiled); 
+		         
+	         //创建临时图层
+	         let graphicLayer=new GraphicsLayer();
+	         graphicLayer.id="templayerid";
+	         map.addLayer(graphicLayer);
+	         //创建项目点图层
+	         let pointLayer=new GraphicsLayer();
+	         pointLayer.id="pointid";
+	         map.addLayer(pointLayer);
+	         //加载项目点
+	         loadProjPoint(pointLayer);
+	         intWidget();
+	         on(pointLayer,"click",(evt)=>{
+	        	 //处理项目点与专题的管理
+	        	      let html="";
+	        	      if(evt.graphic.attributes.ID!=null){
+		        	    	html+="<div  style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"项目编号: "+"</div><div  style='padding-left:5px'>"+evt.graphic.attributes.ID+"</div></div>"
+		        	    }
+	        		  if(evt.graphic.attributes.NAME!=null){
+		        	    	html+="<div style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"项目名称: "+"</div><div  style='padding-left:5px'>"+evt.graphic.attributes.NAME+"</div></div>"
+		        	    }
+		        	    html+="<div style='margin-top: 2px;float:right'><button onclick=lickPro('"+evt.graphic.attributes.NAME+"') class='layui-btn layui-btn-xs layui-btn-normal'>查看专题</button></div>"  
+		        	    MapAppconfig.map.infoWindow.setTitle("项目信息");
+		        	    MapAppconfig.map.infoWindow.setContent(html);
+		        	    MapAppconfig.map.infoWindow.show(evt.mapPoint);
+		        	     graphicLayer.clear();
+		        	     let symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_SQUARE,25,
+			                        new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([255,0,0]),1),
+			                        new Color([0,255,0,0.1]));
+		        	     let graphic=new Graphic(evt.graphic.geometry,symbol,evt.graphic.attributes);
+                 graphicLayer.add(graphic)
+		                 MapAppconfig.map.centerAndZoom(evt.graphic._extent.getCenter(),13)
+             });
+	 })};
+	 lickPro=function(name){
+		 require(["widget/LayerTreeQuery2"],function(LayerTreeQuery){
+			let layerTreeQuery=new LayerTreeQuery();
+			layerTreeQuery.queryLayerTree(name);
+	      });
+	 };
+	 loadProjPoint=function(pointLayer){
+		 require(["widget/MapAppconfig","esri/tasks/query","esri/tasks/QueryTask","esri/graphic","esri/symbols/PictureMarkerSymbol"],
+				 function(MapAppconfig,Query,QueryTask,Graphic,PictureMarkerSymbol){
+			 
+			  QueryTask = new esri.tasks.QueryTask(MapAppconfig.xmpro + "/0");
+			  query = new esri.tasks.Query();
+			  var whereStr = "1=1";
+			  query.where = whereStr;
+			  query.outFields = [ "*" ];
+			  query.returnGeometry = true;
+			  QueryTask.execute(query, function(result){
+				  let res=result.features;
+				  if(res.length>0)
+			  	  {
+			  		for ( var i = 0; i < res.length; i++) 
+			  		{
+			  			var feature = res[i];
+			  			var attr = {"NAME" : feature.attributes.NAME,"ID" : feature.attributes.PRO_ID};
+			  			
+			  			var symbol = new PictureMarkerSymbol("images/xzcon-icon.png", 11, 15);
+			  			var graphic = new Graphic(feature.geometry,symbol, attr);
+			  			pointLayer.add(graphic);
+			  		}
+			  	  }
+			  });
+			  
+		 })
+	 };
+	 let mapresize=function(){
+		 window.onresize=function(){
+			 require(["widget/MapAppconfig"],function(MapAppconfig){
+				 MapAppconfig.map.resize(true);
+				 MapAppconfig.map.reposition();
+			 })
+			 
+	     }
+		 
+	 }
+	 
+   let intWidget=function(){
+	 //初始化图层求换组件
+     require(["widget/MapManager"],function(MapManager){
+    	 let maptool=new MapManager({layerid:"templayerid"}); 
+     });
+     require(["widget/LayerTree"],function(LayerTree){
+     	 
+    	  let layerTree=new LayerTree();
+    	  layerTree.intLayerTree();
+    	 
+    	
+     });
+     require(["widget/LayerSwitch"],function(LayerSwitch){
+     
+     	 let layerSwitch=new LayerSwitch();
+     	 layerSwitch.intUI();
+     
+      });
+     require(["widget/TimeImage"],function(TimeImage){
+         
+     	 let timeImage=new TimeImage();
+     	timeImage.intImage();
+     
+      });
+   require(["widget/MapMenu","widget/MapAppconfig",],function(MapMenu,MapAppconfig){
+     	let mapMenu=new MapMenu();
+     	mapMenu.intMenuWwidget();
+     	MapAppconfig.map.on("mouse-up",(evt)=>{
+       	 if(evt.button == 2){
+            //绑定父容器
+            MapAppconfig.MapMenu.bindDomNode(MapAppconfig.map.container);
+            }
+        });
+        MapAppconfig.MapMenu.startup();
+     
+      });
+     
+ }
+ 
+
+
+ </script>
+</body>
+</html>

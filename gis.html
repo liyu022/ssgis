@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+ <link rel="stylesheet"
+		href="http://113.140.66.230:18101/arcgis_js_v323_api/arcgis_js_api/library/3.23/3.23/dijit/themes/claro/claro.css"/>
+	<link rel="stylesheet"
+		href="http://113.140.66.230:18101/arcgis_js_v323_api/arcgis_js_api/library/3.23/3.23/esri/css/esri.css"/>
+	<link rel="stylesheet"
+		href="http://113.140.66.230:18101/arcgis_js_v323_api/arcgis_js_api/library/3.23/3.23/dijit/themes/soria/soria.css"/>
+    <link rel="stylesheet" href="plugins/layui/css/layui.css"/>
+    <style>
+      html, body, #mapDiv {
+        padding:0;
+        margin:0;
+        height:100%;
+      }
+    </style>
+    <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript" src="http://113.140.66.230:18101/arcgis_js_v323_api/arcgis_js_api/library/3.23/3.23/init.js"></script>
+    <script src="plugins/layui/layui.js" charset="utf-8"></script>
+    <script>
+   var map;
+   $(function(){
+       let pointArr = [{x: 108.567, y: 34.83,name: "废水"}, {x: 108.267, y: 34.23,name: "废水"}, {x: 108.167, y: 34.85,name: "废水"}];
+       intMap(pointArr)
+   })
+   let intMap=function(pointArr) {
+       require([
+           "esri/map", "esri/layers/ArcGISTiledMapServiceLayer",
+           "dojo/_base/array", "dojo/dom", "esri/graphic",
+           "esri/tasks/query",
+           "esri/tasks/QueryTask",
+           "esri/layers/GraphicsLayer",
+           "esri/symbols/SimpleMarkerSymbol",
+           "esri/symbols/SimpleLineSymbol",
+           "esri/Color",
+           "esri/request",
+           "esri/symbols/Font",
+           "esri/layers/FeatureLayer",
+           "esri/symbols/TextSymbol",
+           "esri/symbols/PictureMarkerSymbol",
+           "esri/InfoTemplate",
+           "esri/geometry/Point",
+           "esri/tasks/find",
+           "dojo/on", "dojo/domReady!"
+       ], function (
+           Map, ArcGISTiledMapServiceLayer,
+           arrayUtils,
+           dom,
+           Graphic,
+           Query,QueryTask, GraphicsLayer,
+           SimpleMarkerSymbol, SimpleLineSymbol,
+           Color, esriRequest,Font, FeatureLayer,TextSymbol, PictureMarkerSymbol, InfoTemplate, Point, find, on
+       ) {
+           map = new Map("mapDiv", {
+               maxZoom: 9,
+               minZoom: 5,
+               zoom: 5
+           });
+           //添加影像
+           let yxLayer = new ArcGISTiledMapServiceLayer("http://113.140.66.226:33225/arcgis/rest/services/TDTSxImgMap/MapServer");
+           map.addLayer(yxLayer);
+           //影像标注
+           let yxbzLayer = new ArcGISTiledMapServiceLayer("http://113.140.66.226:33225/arcgis/rest/services/TDTSxBaseMap_LB/MapServer");
+           map.addLayer(yxbzLayer);
+           function queryGeo(obj){
+               let flag = false;
+               let point = new Point(obj.x, obj.y);
+               //把需要查询的底图服务加载进来
+               let query = new Query();
+               var queryTask = new QueryTask("http://113.140.66.230:18180/arcgis/rest/services/SXborderline/MapServer/0");
+               query.returnGeometry = true;
+               query.outFields = ["*"];
+               query.where = "1=1";
+               //进行查询
+               queryTask.execute(query,function(res) {
+                   console.dir(res)
+                   let feature = res.features[0]
+                    flag=feature.geometry.contains(point)
+                       alert(flag);
+                         /*if(flag){
+                            return true
+                       }*/
+                })
+               return flag
+           }
+           let makerSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 10,
+               new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([204, 102, 51]), 1),
+               new Color([255, 0, 0, 1]));
+           let graphicLayer = new GraphicsLayer();
+           graphicLayer.id = "pointLayer";
+           map.addLayer(graphicLayer);
+           let textLayer = new GraphicsLayer();
+           textLayer.id = "textLayer";
+           map.addLayer(textLayer);
+           on(map, "click", function (evt) {
+              //let flag = queryGeo(evt.mapPoint)
+               //把需要查询的底图服务加载进来
+               let xypoint = evt.mapPoint;
+               let query = new Query();
+               var queryTask = new QueryTask("http://113.140.66.230:18180/arcgis/rest/services/SXborderline/MapServer/0");
+               query.returnGeometry = true;
+               query.outFields = ["*"];
+               query.where = "1=1";
+               //进行查询
+               queryTask.execute(query,function(res) {
+                   let feature = res.features[0]
+                   flag=feature.geometry.contains(xypoint)
+                   if(flag){
+                       let graphic = new Graphic(xypoint, makerSymbol, null);
+                       graphicLayer.add(graphic);
+                       $("#lot").val(xypoint.x);
+                       $("#lat").val(xypoint.y);
+                   }else{
+                       layer.alert('请输入选择有效坐标点！', {icon: 1});
+                   }
+               })
+           })
+           on(graphicLayer, "mouse-over", function (evt) {
+               let html = "";
+               if (evt.mapPoint.x != null) {
+                   html += "<div style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >" + "经度: " + "</div><div  style='padding-left:5px'>" + evt.mapPoint.x + "</div></div>"
+               }
+               if (evt.mapPoint.y != null) {
+                   html += "<div  style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >" + "纬度: " + "</div><div  style='padding-left:5px'>" + evt.mapPoint.y + "</div></div></div>"
+               }
+               map.infoWindow.setTitle("位置信息");
+               map.infoWindow.setContent(html);
+               map.infoWindow.show(evt.mapPoint);
+           })
+
+           function getGrapgicsSign(xyObj) {
+               let point = new Point(xyObj.x, xyObj.y);
+               var graphic = new Graphic(point, makerSymbol);
+               graphicLayer.add(graphic);
+               map.centerAt(point);
+           }
+         if(pointArr.length>0) {
+               for (var i = 0; i < pointArr.length; i++) {
+                   let point = new Point(pointArr[i].x, pointArr[i].y);
+                   var pictureMarkerSymbol = new PictureMarkerSymbol("images/xzcon-icon.png", 15, 20);
+                   pictureMarkerSymbol.setOffset(0, 0.5);
+                   var graphic = new Graphic(point, pictureMarkerSymbol);
+                   var textsymbol = new TextSymbol(pointArr[i].x);
+                   textsymbol.setFont(new Font("12pt").setWeight(Font.WEIGHT_BOLD));
+                   textsymbol.setOffset(1, 15);
+                   textsymbol.setColor(new Color([255, 0, 0, 0.8]));
+                   var graphicText = new Graphic(point, textsymbol);
+                   graphicLayer.add(graphic);
+                   textLayer.add(graphicText);
+               }
+           }
+
+           function clearPoints() {
+               $("#lot").val("");
+               $("#lat").val("");
+               map.getLayer("pointLayer").clear();
+               map.getLayer("textLayer").clear();
+               map.graphics.clear();
+               map.infoWindow.hide();
+           }
+
+           layui.use(['form'], function () {
+               var form = layui.form;
+               var layer = layui.layer;
+               layui.$('#getMapPoint').on('click', function () {
+                   let pointArr = [{x: 108.567, y: 34.83}, {x: 108.267, y: 34.23}, {x: 108.167, y: 34.85}];
+                   let obj = {x: 109.069, y: 35.003}
+                   /*addGraphic(pointArr)*/
+                   queryGeo(obj)
+               })
+               layui.$('#getPositionPoint').on('click', function () {
+                   if ($("#lot").val() > 0 && $("#lat").val() > 0 && $("#lot").val() < 180 && $("#lat").val() < 180) {
+                       let xyObj = {x: $("#lot").val(), y: $("#lat").val()}
+                       getGrapgicsSign(xyObj);
+                   } else {
+                       layer.alert('输入的坐标信息有误！', {icon: 1});
+                   }
+               });
+               layui.$('#clearPoints').on('click', function () {
+                   clearPoints()
+               });
+               layui.$('#save').on('click', function () {
+                   alert(formatDegree($("#lot").val()));
+                   alert(formatDegree($("#lat").val()));
+               });
+           })
+           function formatDegree(value) {
+               ///<summary>将度转换成为度分秒</summary>
+               value = Math.abs(value);
+               var v1 = Math.floor(value);//度
+               var v2 = Math.floor((value - v1) * 60);//分
+               var v3 = Math.round((value - v1) * 3600 % 60);//秒
+               return v1 + '度' + v2 + '分' + v3 + '秒';
+           }
+       })
+   }
+  </script>
+      <script>
+
+      </script>
+      <style>
+          .layui-input-block {
+              margin-left: 80px !important;
+              min-height: 36px;
+          }
+          .layui-form-label {
+              float: left;
+              display: block;
+              padding: 9px 15px;
+              width: 50px !important;
+              font-weight: 400;
+              line-height: 20px;
+              text-align: center !important;
+          }
+      </style>
+  </head>
+  <body class="claro">
+      <div style="border:2px solid #eeeeee;background-color:#ffffff;position: absolute;width: 370px;height: 220px;right: 10px;top: 10px;border-radius:5px;z-index:10;">
+          <form class="layui-form" action="">
+              <div class="layui-card">
+                  <div class="layui-card-header" style="background-color:#eeeeee;">位置信息<span style="color:red;">【建议使用地图选点，手动输入可能有偏移】</span></div>
+                  <div class="layui-card-body">
+                      <div class="layui-form-item">
+                          <label class="layui-form-label" style="background-color:#eeeeee;">经度:</label>
+                          <div class="layui-input-block">
+                              <input type="text" name="title" lay-verify="title" id="lot" autocomplete="off" placeholder="请输入经度" class="layui-input">
+                          </div>
+                      </div>
+                      <div class="layui-form-item">
+                          <label class="layui-form-label" style="background-color:#eeeeee;">纬度:</label>
+                          <div class="layui-input-block">
+                              <input type="text" name="username" lay-verify="required" id="lat" lay-reqtext="用户名是必填项，岂能为空？" placeholder="请输入纬度" autocomplete="off" class="layui-input">
+                          </div>
+                      </div>
+                      <div>
+                          <button type="button" class="layui-btn layui-btn-primary" id="getMapPoint">重新拾取</button>
+                          <button type="button" class="layui-btn" id="getPositionPoint">定位</button>
+                          <button type="button" class="layui-btn layui-btn-normal" id="clearPoints">清除</button>
+                          <button type="button" class="layui-btn layui-btn-warm" id="save">确定</button>
+                      </div>
+                  </div>
+              </div>
+          </form>
+      </div>
+    <div id="mapDiv" style="z-index:1;">
+
+     </div>
+  </body>
+ 

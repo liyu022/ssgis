@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+ html, body {
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow:hidden;
+            padding:0px;
+            margin:0px;
+        }
+        #o_mapCon,#t_mapCon{
+        float:left;
+        width:50%;
+        height:100%;
+        }
+        #mapLinkTree{
+             position: absolute;
+             right: 20px;
+             bottom: 20px;
+             border: 1px solid #1749de;
+             padding: 10px 40px;
+             background-color: #1749de;
+             opacity: 0.8;
+             border-radius: 5px;
+             box-shadow: 2px 2px 5px #1749de;
+             width: 250px;
+             background-color: white;
+        }
+</style>
+ <link rel="stylesheet" href="plugins/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+ <link rel="stylesheet"
+		href="http://113.140.66.230:18101/arcgis_js_v323_api/arcgis_js_api/library/3.23/3.23/dijit/themes/claro/claro.css"/>
+	<link rel="stylesheet"
+		href="http://113.140.66.230:18101/arcgis_js_v323_api/arcgis_js_api/library/3.23/3.23/esri/css/esri.css"/>
+	<link rel="stylesheet"
+		href="http://113.140.66.230:18101/arcgis_js_v323_api/arcgis_js_api/library/3.23/3.23/dijit/themes/soria/soria.css"/>
+    <script type="text/javascript">
+    var root = location.href.slice(0, location.href.lastIndexOf('/'));
+    
+        dojoConfig = {
+            parseOnLoad: true,
+            packages: [
+            {
+                name: "widget",
+                location: root+"/widget"
+            }
+            ]
+        };
+     
+   
+    </script>
+  <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+  <script type="text/javascript" src="plugins/ztree/jquery.ztree.all.min.js"></script>
+  <script type="text/javascript" src="http://113.140.66.230:18101/arcgis_js_v323_api/arcgis_js_api/library/3.23/3.23/init.js"></script>
+ 
+</head>
+<body>
+<div id="o_mapCon"></div>
+<div id="t_mapCon"></div>
+<div id="mapLinkTree" class ="ztree"></div>
+
+ <script type="text/javascript">
+ $(function(){
+	 intMap();
+ })
+ let intMap=function(){
+	 require(["esri/map",
+	          "widget/MapLinkager",
+	          "esri/geometry/Extent",
+	          "esri/SpatialReference",
+	          "widget/MapAppconfig",
+	          "esri/layers/ArcGISTiledMapServiceLayer",
+	          "esri/layers/GraphicsLayer"],
+	          function(Map,MapLinkager,Extent,SpatialReference,
+	        		  MapAppconfig,ArcGISTiledMapServiceLayer,GraphicsLayer){
+
+		 let mapExtnt = Extent(
+				   MapAppconfig.mapExtent.xmin,
+				   MapAppconfig.mapExtent.ymin,
+				   MapAppconfig.mapExtent.xmax,
+				   MapAppconfig.mapExtent.ymax,
+	           new SpatialReference(MapAppconfig.mapExtent.wkid)
+	       );
+		 let mapParam={
+				 logo: false ,//logo
+				 isZoomSlider:false,
+				 extent:mapExtnt
+		 }
+		 let oMap=new Map("o_mapCon",mapParam);
+		 MapAppconfig.map=oMap;
+		 
+		 MapAppconfig.root=root;
+		 MapAppconfig.map.setMapCursor("crosshair");
+		 let pTileLayer=new ArcGISTiledMapServiceLayer(MapAppconfig.ssyx);
+		 oMap.addLayer(pTileLayer); 
+		 
+		 let graphicLayer=new GraphicsLayer();
+	     graphicLayer.id="templayerid";
+	     oMap.addLayer(graphicLayer);
+		 
+		 let tMap=new Map("t_mapCon",mapParam);
+		 pTileLayer=new ArcGISTiledMapServiceLayer(MapAppconfig.ssyx);
+		 tMap.addLayer(pTileLayer);
+		 MapAppconfig.mapt=tMap;
+		 
+		 let mapLink=new MapLinkager()
+		 mapLink.addMap(oMap);
+		 mapLink.addMap(tMap);
+		 intWidget();
+		 
+	 })
+ }
+ let intWidget=function(){
+	 require(["widget/MapLinkTree"],function(MapLinkTree){
+		 let mapTree=new MapLinkTree();
+		 mapTree.intLayerTree();
+		 
+	 })
+ }
+ </script>
+</body>
+</html>
