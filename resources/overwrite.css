@@ -1,0 +1,130 @@
+.claro .dijitContentPane {
+	padding: 0;
+}
+
+.claro .dijitSplitContainer-child, .claro .dijitBorderContainer-child {
+	overflow: visible ! important;
+	border: 0;
+}
+
+.dijitAlignTop, .dijitAlignBottom, .dijitAlignLeft, .dijitAlignRight {
+	position: absolute;
+}
+
+.dijitGutter {
+	display: none !important;
+	position: absolute;
+	font-size: 1px;
+}
+
+.claro .dijitSplitterH, .claro .dijitGutterH {
+	background: none;
+	border: 0;
+	height: 5px;
+	display: none !important;
+}
+
+.dojoxExpandoPane {
+	z-index: 440 !important;
+}
+
+.dojoxExpandoPane .dojoxExpandoWrapper {
+	height: 100%;
+	overflow: hidden;
+}
+
+.dojoxExpandoIcon {
+	width: 10px;
+	border: 1px solid #c8c8c8;
+	border-left: none;
+	cursor: pointer;
+	height: 80px;
+}
+
+.dijitBorderContainer-dijitExpandoPane {
+	/*      border: none !important; */
+	
+}
+
+.claro .dojoxExpandoTitle {
+	width: 10px;
+	height: 80px;
+	position: absolute;
+	right: -11px;
+	top: 50%;
+	margin-top: -40px;
+	color: #4a4a4a;
+}
+
+.claro .dojoxExpandoClosed .dojoxExpandoTitle {
+	background: none;
+	/*     background-color: #E6E6E7;*/
+	border: none;
+	/*     padding: 3px;*/
+}
+
+.claro .dojoxExpandoClosed {
+	background: none;
+	/*      background-color: #E6E6E7; */
+	/*      border: 1px solid #769DC0 !important; */
+}
+
+.claro .dojoxExpandoRight .dojoxExpandoTitle, .claro .dojoxExpandoLeft .dojoxExpandoTitle,
+	.claro .dojoxExpandoClosed .dojoxExpandoTitle {
+	/*     background-color: #E6E6E7;*/
+	
+}
+
+.claro .dojoxExpandoIcon {
+	
+}
+
+.claro .dojoxExpandoClosed .dojoxExpandoIconLeft, .claro .dojoxExpandoClosed .dojoxExpandoIconRight,
+	.claro .dojoxExpandoClosed .dojoxExpandoIconTop, .claro .dojoxExpandoClosed .dojoxExpandoIconBottom
+	{
+	/*     margin-top: 3px;*/
+	
+}
+
+.dojoxExpandoClosed .dojoxExpandoIcon {
+	/*     margin-right: 4px;*/
+	
+}
+
+.dojoxExpandoIconLeft {
+	background-position: 0 0;
+	background-color: #fff;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.dojoxExpandoClosed .dojoxExpandoIconLeft {
+	background-position: -30px 0;
+	/*     margin-right: 4px;*/
+}
+
+.claro .dijitAccordionContainer .dijitAccordionChildWrapper {
+	background-color: #ffffff;
+}
+
+/*覆盖esri默认的样式*/
+/*.map .tooltip {*/
+/*display: none;*/
+/*}*/
+.esriPopup .titleButton.maximize {
+	display: none;
+}
+
+.esriLargeSliderVertical .esriLargeSliderLabels {
+	width: 2em;
+	font-family: Verdana;
+	font-size: 100%;
+}
+
+.sizer .content div {
+	display: none;
+}
+
+.esriPopup .actionsPane .action {
+	display: none;
+}

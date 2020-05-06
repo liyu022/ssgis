@@ -1,0 +1,92 @@
+@import
+	url("http://59.215.222.132:8888/arcgis_js_api/library/3.10/3.10/js/dojo/dijit/themes/claro/claro.css")
+	;
+
+@import
+	url("http://59.215.222.132:8888/arcgis_js_api/library/3.10/3.10/js/esri/css/esri.css")
+	;
+
+@import
+	url("http://59.215.222.132:8888/arcgis_js_api/library/3.10/3.10/js/dojo/dojo/resources/dojo.css")
+	;
+/*@import url("http://10.228.2.73/arcgis_js_api/library/3.10/3.10/js/dojo/dijit/themes/claro/claro.css");*/
+/*@import url("http://10.228.2.73/arcgis_js_api/library/3.10/3.10/js/esri/css/esri.css");*/
+/*@import url("http://10.228.2.73/arcgis_js_api/library/3.10/3.10/js/dojo/dojo/resources/dojo.css");*/
+@import url("ExpandoPane.css");
+
+@import url("overwrite.css");
+
+@import url(../layout/nav/nav.css);
+
+@font-face {
+	font-family: 'iconfont';
+	src: url('../../framework/font/iconfont.eot'); /* IE9*/
+	src: url('../../framework/font/iconfont.eot?#iefix')
+		format('embedded-opentype'), /* IE6-IE8 */ 
+		url('../../framework/font/iconfont.woff') format('woff'),
+		/* chrome、firefox */ url('../../framework/font/iconfont.ttf')
+		format('truetype'),
+		/* chrome、firefox、opera、Safari, Android, iOS 4.2+*/ 
+		url('../../framework/font/iconfont.svg#uxiconfont') format('svg');
+	/* iOS 4.1- */
+}
+
+html, body {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	padding: 0
+}
+
+input {
+	border: 1px solid #c8c8c8;
+	padding: 0 5px;
+}
+
+/*.loading{font-size:1.5em;text-align:center;}*/
+/*.loaded .loading{display:none}*/
+.claro .dijitContentPane {
+	padding: 0;
+}
+
+.claro .dijitSplitContainer-child, .claro .dijitBorderContainer-child {
+	overflow: visible !important;
+	border: 0;
+}
+
+.dijitAlignTop, .dijitAlignBottom, .dijitAlignLeft, .dijitAlignRight {
+	position: absolute;
+}
+
+#leftExpandPane {
+	font-size: inherit !important;
+}
+
+.dijitGutter {
+	display: none !important;
+	position: absolute;
+	font-size: 1px;
+}
+
+.dzdt-a-btn {
+	font-family: "微软雅黑";
+	border: 2px solid #21b0eb;
+	border-radius: 15px;
+	padding: 0 25px;
+	line-height: 30px;
+	background: #fff;
+	transition: all 0.3s ease-in-out 0s;
+}
+
+.dzdt-a-btn:hover {
+	cursor: pointer;
+	background: #21B0EB;
+	color: #fff;
+}
+
+:-moz-full-screen {
+	position: fixed;
+	width: 100%;
+	top: 0;
+	background: #ffffff;
+}
