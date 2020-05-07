@@ -12,6 +12,17 @@
     float: left;
     line-height: 80px;
 }
+hr{
+    display:none;
+    height: 5px;
+    margin: -7px 0 !important;
+    border: 0;
+    clear: both;
+    width: 50%;
+    position: relative;
+    left: 25%;
+    background-color: #92ece0 !important;
+}
 .time{
     width:10%;
     float: right;
@@ -101,6 +112,10 @@
     background-color:rgba(3, 44, 31, 0.6);
 } 
 #nav li.sfhover ul{
+    display:block;
+    clear: auto;
+} 
+#nav li.sfhover hr{
     display:block;
     clear: auto;
 } 
