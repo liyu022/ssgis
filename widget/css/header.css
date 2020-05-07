@@ -1,44 +1,114 @@
 #header{
-    border-width: 0px;
     position: absolute;
     left: 0px;
     top: 0px;
     width: 100%;
-    height: 94px;
-    background-color:#9CFFED;
-    opacity: 0.5;
+    height: 89px;
+    background-color:rgba(38, 101, 95, 0.66);
+    border: solid 1px #92ece0;
 }
-#header>ul,#header>a{
-    width: 71px;
-    height: 17px;
-    line-height: 94px;
+.banner{
+    width:50%;
+    float: left;
+    line-height: 80px;
+}
+.time{
+    width:10%;
+    float: right;
+    font:700 18px simsun;
+    height: 89px;
+    text-align: center;
+    color:#ffffff;
+    padding-top:18px;
+}
+.time-top{
+    width:100%;
+    float: right;
+    line-height: 30px;
+}
+.time-bottom{
+    width:100%;
+    float: right;
+    line-height: 30px;
+}
+#nav{
+    height: 89px;  
+    line-height: 89px;  
+    font-family: MicrosoftYaHei;
+	font-size: 23px;
+    font-weight: normal;
+    width: 40%;
+    float: left;
+} 
+ 
+#nav a:link {
+    text-decoration:none;
+    text-align: center;
+}
+#nav li{
+    float: right; 
+    width: 133px;
+    height: 89px;
+    color: #EFEFEF;
+} 
+#nav li a{
+    display: block;
+    text-align: center;
+    width: 133px;
+	height: 89px;
 	font-family: MicrosoftYaHei;
-	font-size: 13px;
+	font-size: 20px;
 	font-weight: normal;
 	font-stretch: normal;
 	letter-spacing: 0px;
-	color: #ffffff;
-}
-#header>ul>a{
+    color: #ffffff;
+} 
+#nav li a:hover{
+    background: linear-gradient(to bottom, rgba(38, 101, 95, 0.2) 50%, rgba(38, 101, 95, 0.40), rgba(38, 101, 95, 0.66));
     display: block;
+    text-align:center;
+    width: 133px;
+	height: 89px;
+	font-family: MicrosoftYaHei;
+	font-size: 20px;
+	font-weight: normal;
+	font-stretch: normal;
+	letter-spacing: 0px;
+    color: #ffffff;
+}
+#nav li ul{
+    line-height: 42px;
+    display:none;
+    text-align:center;position: absolute;
+} 
+#nav li ul li{
+    float: left;
+    width: 133px;
+    height: 42px;
+    color:#ffffff;
+} 
+#nav li ul a{
+    display: block; width: 133px;height:42px;text-align:center; overflow:hidden; color:#ffffff;font-size:19px;} 
+ 
+#nav li ul a:link {text-decoration:none;height:42px;} 
+#nav li ul a:visited {text-decoration:none;height:42px;} 
+#nav li ul a:hover {text-decoration:none;font-weight:normal;height:42px; background-color:rgba(39, 142, 135, 0.66);} 
+#nav li:hover ul{
+    left: auto; 
+    top:89px;
+    width: 133px;
+    z-index:10;
+    background-color:rgba(3, 44, 31, 0.6);
+} 
+#nav li.sfhover ul{
+    display:block;
+    clear: auto;
+} 
+#nav li.sfhover{
+    display: block;
+    text-align:center;
+    background: linear-gradient(to bottom, rgba(38, 101, 95, 0.01) 50%, rgba(38, 101, 95, 0.40), rgba(38, 101, 95, 0.66));
     color: #ffffff;
 }
 
-.plat{
-    display: none;
-    background-color: #f3f3f3;
-}
-a:hover {
-    color: #ffffff !important;
-}
-.nav{
-     float: left;
-     margin-left: 1px;
- }
- #header>.nav:hover .plat{
-    display: block;
-    clear: both;
-}
-#header>.plat li:hover>a{
-    color: #ffffff !important;
-}
+#content{clear: left} 

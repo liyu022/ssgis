@@ -16,7 +16,7 @@
         }
 </style>
  <link rel="stylesheet" href="widget/css/Map.css">
- <!-- <link rel="stylesheet" href="widget/css/header.css"> -->
+ <link rel="stylesheet" href="widget/css/header.css">
  <link rel="stylesheet" href="plugins/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
  <link rel="stylesheet"
 		href="http://113.140.66.230:18101/arcgis_js_v323_api/arcgis_js_api/library/3.23/3.23/dijit/themes/claro/claro.css"/>
@@ -27,7 +27,7 @@
      <link rel="stylesheet"
 		href="plugins/layui/css/layui.css"/>
     <script type="text/javascript">
-    var root = location.href.slice(0, location.href.lastIndexOf('/'));
+        var root = location.href.slice(0, location.href.lastIndexOf('/'));
         dojoConfig = {
             parseOnLoad: true,
             packages: [
@@ -36,7 +36,7 @@
                 location: root+"/widget"
             }
             ]
-        }
+		}
     </script>
     
   <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
@@ -48,33 +48,68 @@
 <body>
  <div id="mapid">
  </div>
- <!-- <div id=header>
-    <div class="banner"></div>
-	<ul class="nav">
-		<a href="#">服装</a>
-		<ul class="plat">
-			<li><a href="#">衬衫</a></li>
-			<li><a href="#">棉袄</a></li>
-			<li><a href="#">裤衩</a></li>
-		</ul>
-	</ul>
-	<ul class="nav">
-		<a href="#">服装</a>
-		<ul class="plat">
-			<li><a href="#">衬衫</a></li>
-			<li><a href="#">棉袄</a></li>
-			<li><a href="#">裤衩</a></li>
-		</ul>
-	</ul>
-	<ul class="nav">
-		<a href="#">服装</a>
-		<ul class="plat">
-			<li><a href="#">衬衫</a></li>
-			<li><a href="#">棉袄</a></li>
-			<li><a href="#">裤衩</a></li>
-		</ul>
-	</ul>
-</div> -->
+<div id=header>
+    <div class="banner">
+		<img src="images/u216.png"></img>
+	</div>
+	<ul id="nav"> 
+		<li><a href="wu">影像对比</a> 
+			<ul> 
+			<li><a href="#">影像对比</a></li> 
+			<li><a href="#">影像对比</a></li> 
+			<li><a href="#">影像对比</a></li> 
+			<li><a href="#">影像对比</a></li> 
+			<li><a href="#">影像对比</a></li> 
+			<li><a href="#">影像对比</a></li> 
+			</ul> 
+		</li> 
+		<li><a href="si">政府考核</a> 
+			<ul> 
+			<li><a href="#">政府考核</a></li> 
+			<li><a href="#">政府考核</a></li> 
+			<li><a href="#">政府考核</a></li> 
+			<li><a href="#">政府考核</a></li> 
+			<li><a href="#">政府考核</a></li> 
+			<li><a href="#">政府考核</a></li> 
+			</ul> 
+		</li> 
+		<li><a href="san">生态专题</a> 
+			<ul> 
+			<li><a href="#">生态专题</a></li> 
+			<li><a href="#">生态专题</a></li> 
+			<li><a href="#">生态专题</a></li> 
+			<li><a href="#">生态专题</a></li> 
+			</ul> 
+		</li> 
+		<li><a href="er">档案管理</a> 
+			<ul> 
+			<li><a href="#">档案管理</a></li> 
+			<li><a href="#">档案管理</a></li> 
+			<li><a href="#">档案管理</a></li> 
+			<li><a href="#">档案管理</a></li> 
+			<li><a href="#">档案管理</a></li> 
+			<li><a href="#">档案管理</a></li> 
+			</ul> 
+		</li> 
+		<li><a href="yi">一项一档</a> 
+			<ul> 
+			<li><a href="#">一项一档</a></li> 
+			<li><a href="#">一项一档</a></li> 
+			<li><a href="#">一项一档</a></li> 
+			<li><a href="#">一项一档</a></li> 
+			<li><a href="#">一项一档</a></li> 
+			<li><a href="#">一项一档</a></li> 
+			</ul> 
+		</li> 
+	</ul> 
+	<div class="time">
+		<div class="time-top">
+			<img src="images/u217.svg"></img>
+			<span>9:36</span>
+		</div>
+		<div class="time-bottom">2020年4月4日</div>
+	</div>
+</div>
 <div id=maptools>
 	<li class="tool" id="ZoomIn">放大</li>
 	<li class="tool" id="ZoomOut">缩小</li>
@@ -301,9 +336,23 @@
       });
      
  }
- 
-
-
+ </script>
+ <script>
+	 var sfEls = document.getElementById("nav").getElementsByTagName("li"); 
+		for (var i=0; i<sfEls.length; i++){
+			sfEls[i].onmouseover=function(){
+			this.className+=(this.className.length>0? " ": "") + "sfhover"; 
+			}
+			sfEls[i].onMouseDown=function(){
+			this.className+=(this.className.length>0? " ": "") + "sfhover"; 
+			}
+			sfEls[i].onMouseUp=function(){
+			this.className+=(this.className.length>0? " ": "") + "sfhover"; 
+			}
+			sfEls[i].onmouseout=function(){
+			this.className=this.className.replace(new RegExp("( ?|^)sfhover\\b"), "");
+			}
+		}
  </script>
 </body>
 </html>
