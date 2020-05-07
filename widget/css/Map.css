@@ -1,136 +1,166 @@
-#maptools{
-        position: absolute;
-        width: 40px;
-        bottom: 200px;
-        right: 30px;
-        
-        }
-         .tool {
-            height: 40px;
-            width: 40px;
-            list-style: none;
-            text-align: center;
-            font-size: 12px;
-            cursor: pointer;
-            line-height:40px;
-           
-             background: white;
-             border-bottom: none;
-             border-radius: 20px;
-             box-shadow: 1px 1px 2px #1072cc;
-             border: 1px 1px 2px #1072cc;
-             margin: 2px;
-        }
-         .tool:hover {
-            background-color: royalblue;
-        }
-        #xyinfor{
-            width: 350px;
-            height: 50px;
+
+        #maptools{
             position: absolute;
-            bottom: 10px;
-            /* left: 700px; */
-            /* background-color: #1749de; */
-  
-             line-height: 50px;
-             font-size: 18px;
-             color: blue;
-             text-align: center;
-}
-   #layerSwitch{
-    
-        position: absolute;
-        bottom: 20px;
-        right: 30px;
-         display: flex;
-        }
-        .layerimage{
-            width: 75px;
-            height: 75px;
-            list-style: none;
-            text-align: center;
-            line-height: 75px;
-            cursor: pointer;
+            width: 40px;
+            bottom: 200px;
+            right: 30px;
             
-             background: white;
-             border-bottom: none;
-             border-radius: 37px;
-             box-shadow: 1px 1px 2px #1072cc;
-             border: 1px 1px 2px #1072cc;
-             margin: 2px;
+            }
+             .tool {
+                height: 40px;
+                width: 40px;
+                list-style: none;
+                text-align: center;
+                font-size: 12px;
+                cursor: pointer;
+                line-height:40px;
+               
+                 background: white;
+                 border-bottom: none;
+                 border-radius: 20px;
+                 box-shadow: 1px 1px 2px #1072cc;
+                 border: 1px 1px 2px #1072cc;
+                 margin: 2px;
+            }
+             .tool:hover {
+                background-color: royalblue;
+            }
+            #xyinfor{
+                width: 350px;
+                height: 50px;
+                position: absolute;
+                bottom: 10px;
+                /* left: 700px; */
+                /* background-color: #1749de; */
+      
+                 line-height: 50px;
+                 font-size: 18px;
+                 color: blue;
+                 text-align: center;
+               }
+           #layerSwitch{
+        
+                position: absolute;
+                bottom: 20px;
+                right: 30px;
+                display: flex;
+            }
+            .layerimage{
+                width: 75px;
+                height: 75px;
+                list-style: none;
+                text-align: center;
+                line-height: 75px;
+                cursor: pointer;
+                
+                 background: white;
+                 border-bottom: none;
+                 border-radius: 37px;
+                 box-shadow: 1px 1px 2px #1072cc;
+                 border: 1px 1px 2px #1072cc;
+                 margin: 2px;
+            }
+            .layerimage:hover {
+                background-color: royalblue;
+            }
+            #layerTree{
+                 position: absolute;
+                 left: 2px;
+                 bottom: 70px;
+                 border: 1px solid #1749de;
+                 padding: 10px 40px;
+                 background-color: #1749de;
+                 opacity: 0.8;
+                 width: 350px;
+                 border-radius: 5px;
+                 box-shadow: 2px 2px 5px #1749de;
+                 min-height: 200px;
+                 width: 250px;
+                 background-color: white;
+                 display:none
+            }
+            #rightMenu{
+               width: 70px;
+                position: absolute;
+                background-color: #6087fd;
+                left: 20px;
+                top: 20px;
+                position: absolute;
+                text-align: center;
+                box-shadow: 5px 5px 10px #5a5f6d;
+                 visibility:hidden;
+            }
+            #rightMenu ul li{
+                font-size: 12px;
+                line-height: 20px;
+                margin: 0px;
+                padding: 0px;
+                cursor: pointer;
+                list-style: none outside none;
+                background_color: #DFDFDF;
+                border-bottom: 1px solid #fff;
+                padding-left: 3px;
+            }
+            .esriSimpleSliderTL{
+                display: none;
+            }
+            #timeInfo{
+                 width: 60%;
+                 position: absolute;
+                 height: 80px;
+                 left: 20%;
+                 bottom: 10px;
+                 background-color: #1749de;
+                 border-radius: 5px;
+                 box-shadow: 2px 2px 5px #1749de;
+                 opacity: 0.5;
+                 color: white;
+                
+            }
+            #timeSp{
+             text-align: center;
+             height: 20px;
+             display: block;
+             line-height: 20px;
+             margin-top: 5px;
+             }
+            #labelText{
+            text-align: center;
+            }
+            #timeSliderDiv{
+                height: 40px;
+            }
+            
+             .dijitPopup, .dijitMenuPopup{
+                box-shadow: 5px 5px 10px #4b6dce;
+                width:150px;
+                display: block;
+                color: blue;
+            } 
+            .dijitMenuTable{
+             width: 150px !important;
+              
+            }
+           .dijitMenuTable .dijitReset {
+              margin: 0;
+              border: 0;
+              padding: 0;
+              font: inherit;
+              line-height: normal;
+              color: inherit;
+              width: 20px;
+              height: 30px;
+          }  
+        .dijitMenuPassive .dijitMenuItemHover, .dijitMenuItemSelected {
+            background-color: #484de0 !important;
+            color:white !important;
         }
-        .layerimage:hover {
-            background-color: royalblue;
+        .esriPopup .sizer{
+          width:320px !important;
         }
-        #layerTree{
-             position: absolute;
-             left: 2px;
-             bottom: 70px;
-             border: 1px solid #1749de;
-             padding: 10px 40px;
-             background-color: #1749de;
-             opacity: 0.8;
-             width: 350px;
-             border-radius: 5px;
-             box-shadow: 2px 2px 5px #1749de;
-             min-height: 200px;
-             width: 250px;
-             background-color: white;
-             display:block;
-             top: 100px;
-             height: 650px;
-             overflow: auto;
+        .esriPopup .titlePane{
+            background-color: #1E9FFF !important;
         }
-        .esriSimpleSliderTL{
-            display: none;
+        .esriPopup .titlePane .title{
+            background-color: #1E9FFF;
         }
-        #timeInfo{
-             width: 60%;
-             position: absolute;
-             height: 80px;
-             left: 20%;
-             bottom: 10px;
-             background-color: #1749de;
-             border-radius: 5px;
-             box-shadow: 2px 2px 5px #1749de;
-             opacity: 0.5;
-             color: white;
-        }
-        #timeSp{
-         text-align: center;
-         height: 20px;
-         display: block;
-         line-height: 20px;
-         margin-top: 5px;
-         }
-        #labelText{
-        text-align: center;
-        }
-        #timeSliderDiv{
-            height: 40px;
-        }
-	 	.dijitPopup, .dijitMenuPopup{
-		    box-shadow: 5px 5px 10px #4b6dce;
-		    width:150px;
-		    display: block;
-		    color: blue;
-		} 
-		.dijitMenuTable{
-		 width: 150px !important;
-		  
-		}
-       .dijitMenuTable .dijitReset {
-          margin: 0;
-          border: 0;
-          padding: 0;
-          font: inherit;
-          line-height: normal;
-          color: inherit;
-          width: 20px;
-          height: 30px;
-      }  
-    .dijitMenuPassive .dijitMenuItemHover, .dijitMenuItemSelected {
-        background-color: #484de0 !important;
-        color:white !important;
-    
-}

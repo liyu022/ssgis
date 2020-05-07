@@ -88,6 +88,18 @@ define(["dojo/_base/declare",
 	         MapAppconfig.navToolbar.deactivate();
 	         let tempLayer= MapAppconfig.map._layers["templayerid"];
            	 tempLayer.clear();
+           	 //清除矢量动画
+           	var layerIndex = arrayUtil.indexOf(MapAppconfig.map.graphicsLayerIds, "vectTimeid");
+			if(layerIndex!=-1){
+				if(MapAppconfig.vectInter!=null){
+					 clearInterval(MapAppconfig.vectInter);
+				}
+				
+				this.imglayer=MapAppconfig.map._layers["vectTimeid"];
+				MapAppconfig.map.removeLayer(this.imglayer);
+				
+				
+			}
          	 MapAppconfig.map.setMapCursor("default");	
 	        },
 	        fullScreen:function(){
@@ -116,6 +128,8 @@ define(["dojo/_base/declare",
                         		MapAppconfig.LayersTree.checkNode(nodes[0], false, true);
                         	}
                     	}                    
+                    	
+
                     }
 
 	        	}

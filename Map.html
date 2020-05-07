@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>铜川山水田园项目GIS平台</title>
 <style type="text/css">
- html, body,#mapid {
+ html, body,container,#mapid {
             width: 100%;
             height: 100%;
             z-index: 0;
@@ -16,7 +16,7 @@
         }
 </style>
  <link rel="stylesheet" href="widget/css/Map.css">
- <!-- <link rel="stylesheet" href="widget/css/header.css"> -->
+
  <link rel="stylesheet" href="plugins/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
  <link rel="stylesheet"
 		href="http://113.140.66.230:18101/arcgis_js_v323_api/arcgis_js_api/library/3.23/3.23/dijit/themes/claro/claro.css"/>
@@ -27,7 +27,9 @@
      <link rel="stylesheet"
 		href="plugins/layui/css/layui.css"/>
     <script type="text/javascript">
+
     var root = location.href.slice(0, location.href.lastIndexOf('/'));
+    
         dojoConfig = {
             parseOnLoad: true,
             packages: [
@@ -36,7 +38,9 @@
                 location: root+"/widget"
             }
             ]
-        }
+        };
+     
+   
     </script>
     
   <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
@@ -46,74 +50,45 @@
  
 </head>
 <body>
+<div id="container"></div>
  <div id="mapid">
  </div>
- <!-- <div id=header>
-    <div class="banner"></div>
-	<ul class="nav">
-		<a href="#">服装</a>
-		<ul class="plat">
-			<li><a href="#">衬衫</a></li>
-			<li><a href="#">棉袄</a></li>
-			<li><a href="#">裤衩</a></li>
-		</ul>
-	</ul>
-	<ul class="nav">
-		<a href="#">服装</a>
-		<ul class="plat">
-			<li><a href="#">衬衫</a></li>
-			<li><a href="#">棉袄</a></li>
-			<li><a href="#">裤衩</a></li>
-		</ul>
-	</ul>
-	<ul class="nav">
-		<a href="#">服装</a>
-		<ul class="plat">
-			<li><a href="#">衬衫</a></li>
-			<li><a href="#">棉袄</a></li>
-			<li><a href="#">裤衩</a></li>
-		</ul>
-	</ul>
-</div> -->
-<div id=maptools>
-	<li class="tool" id="ZoomIn">放大</li>
-	<li class="tool" id="ZoomOut">缩小</li>
-	<li class="tool" id="Pan">平移</li>
-	<li class="tool" id="DrawPoint">绘点</li>
-	<li class="tool" id="DrawLine">测线</li>
-	<li class="tool" id="DrawPolygon">测面</li>  
-	<li class="tool" id="MapExtent">全图</li>
-	<li class="tool" id="MapClear">清空</li>  
-</div>
-<div id="layerSwitch" >
-	 <li class="layerimage" id="xzqClick">行政区划</li>
-	 <li class="layerimage" id="imageClick">影像图</li>
-	 <li class="layerimage" id="dxClick">地形图</li>
-	 <li class="layerimage" id="skcClick">时空影像</li>
-	 <li class="layerimage" id="maplinkClick">影像对比</li>
-</div>
-<div id="layerTree" class ="ztree"></div>
-<div id="rightMenu">
-   <ul>
-   <li id="fullLayer">缩放图层</li>
-   <li id="timeLayer">数据变化</li>
-   </ul>
-</div>
-<div id="xyinfor"></div>
-<div id="timeInfo" style="visibility:hidden">
-   <span id="timeSp">时间轴</span>
-   <div id="labelText">当前影像时间：2013年</div>
-   <div id="timeSliderDiv"></div>
-</div>
+ <div id=maptools>
+     <li class="tool" id="ZoomIn">放大</li>
+     <li class="tool" id="ZoomOut">缩小</li>
+     <li class="tool" id="Pan">平移</li>
+     <li class="tool" id="DrawPoint">绘点</li>
+     <li class="tool" id="DrawLine">测线</li>
+     <li class="tool" id="DrawPolygon">测面</li>  
+     <li class="tool" id="MapExtent">全图</li>
+     <li class="tool" id="MapClear">清空</li>  
+ </div>
+ <div id="layerSwitch" >
+      <li class="layerimage" id="xzqClick">行政区划</li>
+      <li class="layerimage" id="imageClick">影像图</li>
+      <li class="layerimage" id="dxClick">地形图</li>
+      <li class="layerimage" id="skcClick">时空影像</li>
+      <li class="layerimage" id="maplinkClick">影像对比</li>
+ </div>
+ <div id="layerTree" class ="ztree"></div>
+ <div id="rightMenu">
+    <ul>
+    <li id="fullLayer">缩放图层</li>
+    <li id="timeLayer">数据变化</li>
+    </ul>
+ </div>
+ <div id="xyinfor"></div>
+ <div id="timeInfo" style="visibility:hidden">
+    <span id="timeSp">时间轴</span>
+    <div id="labelText">当前影像时间：2013年</div>
+    <div id="timeSliderDiv"></div>
+ </div>
 
  <script type="text/javascript">
  $(function () {
 	 intMap();
 	 mapresize();
-	 $(".close").click(()=>{
-    	 let tempLayer= MapAppconfig.map._layers["templayerid"];
-			 tempLayer.clear();
-    })
+	
     
 	
  });
@@ -138,6 +113,8 @@
 	          "esri/graphic",
 	          "esri/symbols/SimpleMarkerSymbol",
 	          "esri/InfoTemplate",
+	          "esri/layers/FeatureLayer",
+	        
 	          ],function(Map,
 	        		  ArcGISDynamicMapServiceLayer,
 	        		  Extent, SpatialReference,
@@ -155,7 +132,8 @@
 	        		  Color,
 	        		  Graphic,
 	        		  SimpleMarkerSymbol,
-	        		  InfoTemplate
+	        		  InfoTemplate,
+	        		  FeatureLayer
 	        		  ){
 		
 		   let mapExtnt = Extent(
@@ -174,7 +152,8 @@
 	         });
 	             MapAppconfig.map=map;
 	             MapAppconfig.mapExtnt=mapExtnt;
-	        	 let tiled = new ArcGISTiledMapServiceLayer(MapAppconfig.sssl);
+
+	         	 let tiled = new ArcGISTiledMapServiceLayer(MapAppconfig.sssl);
 		         tiled.id="ssslid";
 		         map.addLayer(tiled);
 		         
@@ -185,11 +164,15 @@
 		         tiled = new ArcGISDynamicMapServiceLayer(MapAppconfig.ssym);
 		         tiled.id="ssymid";
 		         map.addLayer(tiled); 
+		       
+ 		
+		       
 		         
 	         //创建临时图层
 	         let graphicLayer=new GraphicsLayer();
 	         graphicLayer.id="templayerid";
 	         map.addLayer(graphicLayer);
+	         
 	         //创建项目点图层
 	         let pointLayer=new GraphicsLayer();
 	         pointLayer.id="pointid";
@@ -207,6 +190,7 @@
 		        	    	html+="<div style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"项目名称: "+"</div><div  style='padding-left:5px'>"+evt.graphic.attributes.NAME+"</div></div>"
 		        	    }
 		        	    html+="<div style='margin-top: 2px;float:right'><button onclick=lickPro('"+evt.graphic.attributes.NAME+"') class='layui-btn layui-btn-xs layui-btn-normal'>查看专题</button></div>"  
+		        	    
 		        	    MapAppconfig.map.infoWindow.setTitle("项目信息");
 		        	    MapAppconfig.map.infoWindow.setContent(html);
 		        	    MapAppconfig.map.infoWindow.show(evt.mapPoint);
@@ -214,16 +198,34 @@
 		        	     let symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_SQUARE,25,
 			                        new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([255,0,0]),1),
 			                        new Color([0,255,0,0.1]));
-		        	     let graphic=new Graphic(evt.graphic.geometry,symbol,evt.graphic.attributes);
-                 graphicLayer.add(graphic)
-		                 MapAppconfig.map.centerAndZoom(evt.graphic._extent.getCenter(),13)
+		        	     let graphic=new Graphic(evt.graphic.geometry,symbol,evt.graphic.attributes); 
+		                 graphicLayer.add(graphic)
+		                 MapAppconfig.map.centerAndZoom(evt.graphic._extent.getCenter(),13);
+		                
              });
+	         dojo.connect(MapAppconfig.map.infoWindow, "show", function(){
+		         $(".close").click(function(){
+		         		graphicLayer.clear();
+		           }); 
+		         });
+	         
 	 })};
 	 lickPro=function(name){
-		 require(["widget/LayerTreeQuery2"],function(LayerTreeQuery){
-			let layerTreeQuery=new LayerTreeQuery();
-			layerTreeQuery.queryLayerTree(name);
-	      });
+		//  require(["widget/ProjectInfo", 'dojo/_base/array'],function(ProjectInfo, arrayUtil){
+		// 	let proinfo=new ProjectInfo();
+		// 	proinfo.queryLayerTree(name);
+		// 	 MapAppconfig.map.infoWindow.hide();
+		// 	 let layerIndex = arrayUtil.indexOf(MapAppconfig.map.graphicsLayerIds, "templayerid");
+		// 	 if(layerIndex!=-1){
+		// 		 MapAppconfig.map._layers["templayerid"].clear();
+		// 	 }
+		//   });
+		lickPro=function(name){
+			require(["widget/LayerTreeQuery"],function(LayerTreeQuery){
+				let layerTreeQuery=new LayerTreeQuery();
+				layerTreeQuery.queryLayerTree(name);
+			});
+	 	};
 	 };
 	 loadProjPoint=function(pointLayer){
 		 require(["widget/MapAppconfig","esri/tasks/query","esri/tasks/QueryTask","esri/graphic","esri/symbols/PictureMarkerSymbol"],
@@ -237,12 +239,14 @@
 			  query.returnGeometry = true;
 			  QueryTask.execute(query, function(result){
 				  let res=result.features;
+			
 				  if(res.length>0)
 			  	  {
 			  		for ( var i = 0; i < res.length; i++) 
 			  		{
 			  			var feature = res[i];
 			  			var attr = {"NAME" : feature.attributes.NAME,"ID" : feature.attributes.PRO_ID};
+			  			
 			  			var symbol = new PictureMarkerSymbol("images/xzcon-icon.png", 11, 15);
 			  			var graphic = new Graphic(feature.geometry,symbol, attr);
 			  			pointLayer.add(graphic);
@@ -284,7 +288,7 @@
      require(["widget/TimeImage"],function(TimeImage){
          
      	 let timeImage=new TimeImage();
-     	timeImage.intImage();
+     	  timeImage.intImage();
      
       });
    require(["widget/MapMenu","widget/MapAppconfig",],function(MapMenu,MapAppconfig){
@@ -301,7 +305,6 @@
       });
      
  }
- 
 
 
  </script>

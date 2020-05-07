@@ -7,10 +7,6 @@ define(["dojo/_base/declare",
         "esri/layers/FeatureLayer",
         "dojo/on",
         "esri/graphic",
-        "esri/config",
-       "dojo/_base/xhr",
-        "esri/request",
-    	"esri/urlUtils",
         "esri/symbols/SimpleLineSymbol",
         "esri/symbols/SimpleFillSymbol",
         "esri/symbols/SimpleMarkerSymbol",
@@ -18,15 +14,17 @@ define(["dojo/_base/declare",
         "esri/dijit/PopupTemplate",
         "esri/InfoTemplate",
         'dojo/query',
+        "widget/LayerTools"
         ],function(declare, lang, array, basefx,MapAppconfig,arrayUtil,
-        		FeatureLayer,on,Config,Graphic,Xhr,Request,UrlUtils,SimpleLineSymbol,SimpleFillSymbol,
-        		SimpleMarkerSymbol,Color,PopupTemplate,InfoTemplate,query){
+        		FeatureLayer,on,Graphic,SimpleLineSymbol,SimpleFillSymbol,
+        		SimpleMarkerSymbol,Color,PopupTemplate,InfoTemplate,query,LayerTools){
 	return declare(null,{
 		 treeNodeData: null,
 		 treeObject:null,
 		 featureLayer:null,
 		 symbol:null,
 		 isShow:false,
+		 layerTool:null,
 		 treenode: {
              treeSetting: {
                  check: {
@@ -38,7 +36,7 @@ define(["dojo/_base/declare",
                      }
                  },
                  callback: {
-                
+                	
                  },
                  view: {}
              }
@@ -57,27 +55,48 @@ define(["dojo/_base/declare",
 	        intLayerTree:function(){
 	            let self=this;
 	            let treeSetting = this.treenode.treeSetting;
-	            
+	            this.layerTool=new LayerTools();
 	        	treeSetting.callback.onCheck = lang.hitch(this,this.TreeBeforecheck);
 	        	treeSetting.callback.onCheck = lang.hitch(this,this.LayerTreeOnCheck)
 	            treeSetting.callback.onClick = lang.hitch(this, function () {
                       return;
+	            
                   });
+	        	 treeSetting.callback.onRightClick = lang.hitch(this,this.showRightMenu);
 	          	this.treeNodeData=MapAppconfig.layerTree;
 	        	this.treeObject=$.fn.zTree.init($("#layerTree"), treeSetting, this.treeNodeData);
 	        	MapAppconfig.LayersTree=this.treeObject; 
-	        	//初始widget时全部加载到地图  方便后面项目查询
-	            //this.loadTree();
+	  
+	        },
+	        showRightMenu:function(event, treeId, treeNode){
+	        	if(!treeNode.isParent){
+	        		let top = $(window).scrollTop();
+	        		this.showMenu(event.clientX, event.clientY+top);
+	        		this.layerTool.intLayerTool(treeNode)
+	        	}
+	        	
+	        },
+	        showMenu:function(x, y){
+	        	$("#rightMenu ul").show();
+	        	$("#rightMenu").css({
+	        		  "top" : y + "px",
+	                  "left" : x + "px",
+	                  "visibility" : "visible"
+	        	});
 	        	
 	        },
 	        loadTree:function(){
+	        	
 	        	if(MapAppconfig.LayersTree!=null){
 	        		let node=MapAppconfig.LayersTree.getNodes();
 		        	var nodes= MapAppconfig.LayersTree.transformToArray(node);
 		        	for(var i =0;i<nodes.length;i++){
 		        		if(!nodes[i].isParent){
-		        			
+		        		    console.log(nodes[i]);
 		        			this.loadLayer(nodes[i]);
+		        			MapAppconfig.LayersTree.checkNode(nodes[i], true, true);
+		        		}else{
+		        			MapAppconfig.LayersTree.checkNode(nodes[i], true, true);
 		        		}
 		            }
 	        	}
@@ -123,6 +142,7 @@ define(["dojo/_base/declare",
                  }
 	        },
 	        loadLayer:function(item){
+	        	
 	        	let layerurl=item.urlc;
         		let layerid=item.name+"layer";
                 	  let param={
@@ -133,32 +153,13 @@ define(["dojo/_base/declare",
                       	    }
 		
                 this.featureLayer=new FeatureLayer(layerurl,param);
-                MapAppconfig.map.addLayer(this.featureLayer);  
+                MapAppconfig.map.addLayer(this.featureLayer);
+            	
                 this.featureLayer.setVisibility(false);
+              
+              
                 
 	        },
-			getGraphicHtml:function(obj){
-				//bianhao: "1"
-				// code: "1LCZBHFYLCDGLGC1"
-				// flname: "水土流失综合治理"
-				// outcomename: "林草植被恢复与林草地改良工程"
-				// proid: 1
-				// proname: "沮河上游生态保护修复项目（一期）"
-				// shuxinglist: (10) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
-				//0: {propertyname: "封育牌", outcomecount: 10, outcomeunit: "个"}
-				//1: {propertyname: "铁丝护栏", outcomecount: 1980, outcomeunit: "100延米"}
-				//2: {propertyname: "幼林抚育（3 年 4 次）", outcomecount: 840.7, outcomeunit: "公顷"}
-				//3: {propertyname: "迎春花", outcomecount: 258741, outcomeunit: "株"}
-				//4: {propertyname: "连翘", outcomecount: 924186, outcomeunit: "株"}
-				//5: {propertyname: "侧柏", outcomecount: 130536, outcomeunit: "株"}
-				//6: {propertyname: "油松", outcomecount: 551696, outcomeunit: "株"}
-				//7: {propertyname: "块状（方形）整地（40*40*30）", outcomecount: 345876, outcomeunit: "个"}
-				//8: {propertyname: "小鱼鳞坑", outcomecount: 837051, outcomeunit: "个"}
-				//9: {propertyname: "大鱼鳞坑", outcomecount: 682232, outcomeunit: "个"}
-				// subname: "铜川市沮河上游生态保护修复项目(西川及主河道片区)"
-				// zlname: "林草植被恢复与林草地改良工程"
-
-			},
 	        addLayer:function(item){
 	        	if(item!=null){
 	        		let layerurl=item.urlc;
@@ -169,11 +170,10 @@ define(["dojo/_base/declare",
                     	MapAppconfig.map._layers[layerid].setVisibility(true);
                     	on(this.featureLayer,"click",(evt)=>{
                       		 
-                      		 this.getGraphicInfo(evt);
-                      		 MapAppconfig.map.infoWindow.show(evt.mapPoint);
-                      		
+                      		this.getGraphicInfo(evt);
+                      		MapAppconfig.map.infoWindow.show(evt.mapPoint);
                       		this.setFeatureGraphic(this.featureLayer,evt);
-                      	  $("#lickPro").click(function(){
+                      	    $("#lickPro").click(function(){
                   			alert(333); })
                   			
                              })
@@ -187,71 +187,31 @@ define(["dojo/_base/declare",
                           	    mode: FeatureLayer.MODE_ONDEMAND,
                           }
                     		
-						this.featureLayer=new FeatureLayer(layerurl,param);
-						MapAppconfig.map.addLayer(this.featureLayer);
-						if(MapAppconfig.map._layers[layerid].visible){
-							on(this.featureLayer,"click",(evt)=>{
-								 Xhr.get({
-									 url:"http://113.140.66.230:9777/commonservice-system/swagger2/say/getshuxingbygiscode?code="+evt.graphic.attributes.CODE,
-									 handleAs : "json",
-									 load : function(data) {
-										 if(data.code==0){
-                                             let obj = data.list;
-                                             let html="";
-                                             if(obj.bianhao!=null){
-                                                 html+="<div style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"编号: "+"</div><div  style='padding-left:5px'>"+obj.bianhao+"</div></div>"
-                                             }else{
-                                                 html+="<div style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"编号: "+"</div><div  style='padding-left:5px'></div></div>"
-											  }
-                                             if(obj.code!=null){
-                                                 html+="<div  style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"编码: "+"</div><div  style='padding-left:5px'>"+obj.code+"</div></div>"
-                                             }else{
-                                                 html+="<div  style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"编码: "+"</div><div  style='padding-left:5px'></div></div>"
-											  }
-                                             if(obj.flname!=null){
-                                                 html+="<div style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"父类名称: "+"</div><div  style='padding-left:5px'>"+obj.flname+"</div></div>"
-                                             }else{
-                                                 html+="<div style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"父类名称: "+"</div><div  style='padding-left:5px'></div></div>"
-                                             }
-                                             if(obj.outcomename!=null){
-                                                 html+="<div style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"成果名称: "+"</div><div  style='padding-left:5px'>"+obj.outcomename+"</div></div>"
-                                             }else{
-                                                 html+="<div style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"成果名称: "+"</div><div  style='padding-left:5px'></div></div>"
-                                             }
-                                             if(obj.proid!=null){
-                                                 html+="<div style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"项目ID: "+"</div><div  style='padding-left:5px'>"+obj.proid+"</div></div>"
-                                             }else{
-                                                 html+="<div style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"项目ID: "+"</div><div  style='padding-left:5px'></div></div>"
-                                             }
-                                             if(obj.subname!=null){
-                                                 html+="<div  style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;''><div >"+"子项目名: "+"</div><div style='padding-left:5px'>"+obj.subname+"</div></div>"
-                                             }else{
-                                                 html+="<div  style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;''><div >"+"子项目名: "+"</div><div style='padding-left:5px'></div></div>"
-                                             }
-                                             if(obj.zlname!=null){
-                                                 html+="<div  style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"子分类: "+"</div><div  style='padding-left:5px'>"+obj.zlname+"</div></div>"
-                                             }else{
-                                                 html+="<div  style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"子分类: "+"</div><div  style='padding-left:5px'></div></div>"
-                                             }
-                                             if(obj.shuxinglist!=null) {
-                                                 for (let i = 0; i < obj.shuxinglist.length; i++) {
-                                                     if (obj.shuxinglist[i].propertyname!=null) {
-                                                         html += "<div  style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >" + obj.shuxinglist[i].propertyname + ":</div><div  style='padding-left:5px'>" + obj.shuxinglist[i].outcomecount + ""+ obj.shuxinglist[i].outcomeunit+ "</div></div>"
-                                                     }
-                                                 }
-                                             }
-											  MapAppconfig.map.infoWindow.setTitle(obj.proname);
-                                             MapAppconfig.map.infoWindow.setContent(html)
-                                             MapAppconfig.map.infoWindow.show(evt.mapPoint);
-										 }else{
-											alert("数据后台访问接口异常！");
-										 }
-									 }
-								 })
-							 });
-						}
-	        		}
+                    this.featureLayer=new FeatureLayer(layerurl,param);
+                  
+                    MapAppconfig.map.addLayer(this.featureLayer); 
+                    //this.featureLayer.setDefinitionExpression("PRONAME='沮河上游生态保护修复项目（一期）'");
+          		
+                    if(MapAppconfig.map._layers[layerid].visible){
+                    	
+                    	 on(this.featureLayer,"click",(evt)=>{
+                    		 
+                    		 this.getGraphicInfo(evt);
+                    		 MapAppconfig.map.infoWindow.show(evt.mapPoint);
+                    		
+                    		this.setFeatureGraphic(this.featureLayer,evt);
+                    		  $("#lickPro").click(function(){
+                      			alert(333);
+                      		 })
+                    		
+                         });
+                        
+                    }
+                   
+	        	}
+	        	
 	        	}},
+
 	        	setFeatureGraphic:function(featurelayer,evt){
 	        		let geo=evt.graphic.geometry;
 	        		
@@ -310,42 +270,46 @@ define(["dojo/_base/declare",
 	        		
 	        	}
 	        },
-
-        getGraphicInfo:function(evt){
-
-            if(evt.graphic!=null||evt.graphic!=undefined ||evt.graphic!=''){
-                evt.graphic.attributes.NAME!=null?MapAppconfig.map.infoWindow.setTitle(evt.graphic.attributes.NAME)
-                    :MapAppconfig.map.infoWindow.setTitle("");
-                let html="";
-
-                if(evt.graphic.attributes.PARENTTYPE!=null){
-                    html+="<div style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"专题类型: "+"</div><div  style='padding-left:5px'>"+evt.graphic.attributes.PARENTTYPE+"</div></div>"
-                }
-                if(evt.graphic.attributes.PRONAME!=null){
-                    html+="<div  style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"项目名称: "+"</div><div  style='padding-left:5px'>"+evt.graphic.attributes.PRONAME+"</div></div>"
-                }
-                if(evt.graphic.attributes.PROTYPE!=null){
-                    html+="<div style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"项目类型: "+"</div><div  style='padding-left:5px'>"+evt.graphic.attributes.PROTYPE+"</div></div>"
-                }
-                if(evt.graphic.attributes.PRO_ID!=null){
-                    html+="<div style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"项目编号: "+"</div><div  style='padding-left:5px'>"+evt.graphic.attributes.PRO_ID+"</div></div>"
-                }
-                if(evt.graphic.attributes.BUILDER!=null){
-                    html+="<div style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"建设单位: "+"</div><div  style='padding-left:5px'>"+evt.graphic.attributes.BUILDER+"</div></div>"
-                }
-                if(evt.graphic.attributes.COUNTY!=null){
-                    html+="<div  style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;''><div >"+"所在区: "+"</div><div  style='padding-left:5px'>"+evt.graphic.attributes.COUNTY+"</div></div>"
-                }
-                if(evt.graphic.attributes.TOWN!=null){
-                    html+="<div  style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;''><div >"+"所在镇: "+"</div><div style='padding-left:5px'>"+evt.graphic.attributes.TOWN+"</div></div>"
-                }
-                if(evt.graphic.attributes.VILLAGE!=null){
-                    html+="<div  style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"所在乡: "+"</div><div  style='padding-left:5px'>"+evt.graphic.attributes.VILLAGE+"</div></div>"
-                }
-                html+="<div style='margin-top: 2px;float:right'><div type='button' id='lickPro' class='layui-btn layui-btn-xs layui-btn-normal'>查看项目</div></div>"
-                MapAppconfig.map.infoWindow.setContent(html)
-            }
-        }
+	        getGraphicInfo:function(evt){
+	        	
+	        	if(evt.graphic!=null||evt.graphic!=undefined ||evt.graphic!=''){
+	        		evt.graphic.attributes.NAME!=null?MapAppconfig.map.infoWindow.setTitle(evt.graphic.attributes.NAME)
+	        				:MapAppconfig.map.infoWindow.setTitle("");
+	        		let html="";
+	        		
+	        	    if(evt.graphic.attributes.PARENTTYPE!=null){
+	        	    	html+="<div style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"专题类型: "+"</div><div  style='padding-left:5px'>"+evt.graphic.attributes.PARENTTYPE+"</div></div>"
+	        	    }
+	        	    if(evt.graphic.attributes.PRONAME!=null){
+	        	    	html+="<div  style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"项目名称: "+"</div><div  style='padding-left:5px'>"+evt.graphic.attributes.PRONAME+"</div></div>"
+	        	    }
+	        	    if(evt.graphic.attributes.PROTYPE!=null){
+	        	    	html+="<div style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"项目类型: "+"</div><div  style='padding-left:5px'>"+evt.graphic.attributes.PROTYPE+"</div></div>"
+	        	    }
+	        	    if(evt.graphic.attributes.PRO_ID!=null){
+	        	    	html+="<div style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"项目编号: "+"</div><div  style='padding-left:5px'>"+evt.graphic.attributes.PRO_ID+"</div></div>"
+	        	    }
+	        	    if(evt.graphic.attributes.BUILDER!=null){
+	        	    	html+="<div style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"建设单位: "+"</div><div  style='padding-left:5px'>"+evt.graphic.attributes.BUILDER+"</div></div>"
+	        	     }
+	        	    if(evt.graphic.attributes.COUNTY!=null){
+	        	    	html+="<div  style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;''><div >"+"所在区: "+"</div><div  style='padding-left:5px'>"+evt.graphic.attributes.COUNTY+"</div></div>"
+	        	    }
+	        	    if(evt.graphic.attributes.TOWN!=null){
+	        	    	html+="<div  style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;''><div >"+"所在镇: "+"</div><div style='padding-left:5px'>"+evt.graphic.attributes.TOWN+"</div></div>"
+	        	    }
+	        	    if(evt.graphic.attributes.VILLAGE!=null){
+	        	    	html+="<div  style='display:flex;line-height:20px;border-bottom-width:1px; border-bottom-style:dashed; border-bottom-color:#ced5d8;'><div >"+"所在乡: "+"</div><div  style='padding-left:5px'>"+evt.graphic.attributes.VILLAGE+"</div></div>"
+	        	    }
+	        	    html+="<div style='margin-top: 2px;float:right'><div type='button' id='lickPro' class='layui-btn layui-btn-xs layui-btn-normal'>查看详情</div></div>"
+	     
+	        	    MapAppconfig.map.infoWindow.setContent(html)
+	        	
+	        	
+	        		
+	        	}
+	        	
+	        }
 
 		
 	})

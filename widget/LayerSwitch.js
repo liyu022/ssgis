@@ -101,7 +101,7 @@ define(["dojo/_base/declare",
 	        	}))
 	        	$("#maplinkClick").click(lang.hitch(this,()=>{
 	        		
-	        		window.open("http://localhost:8080/gis/MapLinkager.html")
+	        		window.open("http://localhost:8080/MapLinkager.html")
 	        	}));
 	        },
 	        getLayerByid:function(){

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>图层卷帘</title>
+ <style type="text/css">
+    html, body, #container,#mapID {
+      padding:0;
+      margin:0;
+      height:100%;
+      width:100%;
+      overflow:hidden;
+    }
+     #swipeTree{
+             position: absolute !important;
+             right: 20px;
+             bottom: 20px;
+             border: 1px solid #1749de;
+             padding: 10px 40px;
+             background-color: #1749de;
+             opacity: 0.8;
+             border-radius: 5px;
+             box-shadow: 2px 2px 5px #1749de;
+             width: 250px;
+             background-color: white;
+            
+        }
+  </style>
+   <link rel="stylesheet" href="plugins/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+ <link rel="stylesheet"
+		href="http://113.140.66.230:18101/arcgis_js_v323_api/arcgis_js_api/library/3.23/3.23/dijit/themes/claro/claro.css"/>
+	<link rel="stylesheet"
+		href="http://113.140.66.230:18101/arcgis_js_v323_api/arcgis_js_api/library/3.23/3.23/esri/css/esri.css"/>
+	<link rel="stylesheet"
+		href="http://113.140.66.230:18101/arcgis_js_v323_api/arcgis_js_api/library/3.23/3.23/dijit/themes/soria/soria.css"/>
+
+    <script type="text/javascript">
+    var root = location.href.slice(0, location.href.lastIndexOf('/'));
+    
+        dojoConfig = {
+            parseOnLoad: true,
+            packages: [
+            {
+                name: "widget",
+                location: root+"/js/widget"
+            }
+            ]
+        };
+     
+   
+    </script>
+  <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+  <script type="text/javascript" src="plugins/ztree/jquery.ztree.all.min.js"></script>
+  <script type="text/javascript" src="http://113.140.66.230:18101/arcgis_js_v323_api/arcgis_js_api/library/3.23/3.23/init.js"></script>
+ 
+</head>
+<body>
+<div id="container">
+<div id="mapID">
+    <div id="swipeDiv"></div>
+</div>
+<div id="swipeTree" class ="ztree"></div>
+</div>
+
+ 
+ <script type="text/javascript">
+ let intMap=require(["esri/map",
+                     "esri/layers/ArcGISTiledMapServiceLayer",
+                     "esri/dijit/LayerSwipe",
+                     "esri/geometry/Extent",
+       	             "esri/SpatialReference",
+       	             "widget/MapAppconfig",
+                     "dojo/domReady!"],function(Map,
+                    		 ArcGISTiledMapServiceLayer,
+                    		 LayerSwipe,
+                    		 Extent,
+                    		 SpatialReference,
+                    		 MapAppconfig,
+                    		){
+	 let mapExtnt = Extent(
+			   MapAppconfig.mapExtent.xmin,
+			   MapAppconfig.mapExtent.ymin,
+			   MapAppconfig.mapExtent.xmax,
+			   MapAppconfig.mapExtent.ymax,
+         new SpatialReference(MapAppconfig.mapExtent.wkid)
+     );
+	 let mapParam={
+			 logo: false ,//logo
+			 isZoomSlider:false,
+			 extent:mapExtnt
+	 }
+	 let map=new Map("mapID",mapParam);
+	 MapAppconfig.map=map;
+	 let pTileLayer=new ArcGISTiledMapServiceLayer(MapAppconfig.ssyx,{opacity:0.8});
+	 map.addLayer(pTileLayer); 
+	 let swipeLayer=new ArcGISTiledMapServiceLayer(MapAppconfig.sssl);
+	 map.addLayer(swipeLayer); 
+	
+	 var swipeWidget = new LayerSwipe({
+         type: "vertical",  //Try switching to "scope" or "horizontal"
+         map: map,
+         layers: [swipeLayer]
+       }, "swipeDiv");
+       swipeWidget.startup();
+       intWidget();
+	 
+	 
+ });
+ let intWidget=function(){
+	 require(["widget/LayerSwipe"],function(LayerSwipe){
+		
+		  let swipeLayerWidget=new LayerSwipe();
+		  swipeLayerWidget.intLayerTree(); 
+	 })
+ }
+ </script>
+</body>
+</html>

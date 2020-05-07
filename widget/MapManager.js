@@ -234,10 +234,7 @@ define(["dojo/_base/declare",
                                  this.tempLayer.add(new Graphic(spoint,areaResult));//在地图上显示测量的面积
                              }));
                          }));
-
 		            }
-		         
-		 
 		        }
 		},
 		clearTools:function(){
@@ -247,6 +244,16 @@ define(["dojo/_base/declare",
 			this.isDrawLine=false;
 			this.isDrawPoint=false;
 			this.isDrawPloygon=false;
+			// 
+		 	var layerIndex = arrayUtil.indexOf(MapAppconfig.map.graphicsLayerIds, "vectTimeid");
+			if(layerIndex!=-1){
+				if(MapAppconfig.vectInter!=null){
+					 clearInterval(MapAppconfig.vectInter);
+				}
+				let imglayer=MapAppconfig.map._layers["vectTimeid"];
+				MapAppconfig.map.removeLayer(imglayer);
+			}
+				
 			MapAppconfig.map.setMapCursor("default");
 		},
 		areaLable:function(result){
