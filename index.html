@@ -93,8 +93,8 @@
 		</li> 
 		<li><a href="yi">一项一档</a><hr/> 
 			<ul> 
-			<li><a href="#">一项一档</a></li> 
-			<li><a href="#">一项一档</a></li> 
+			<li onclick="itemRiver()"><a href="#">一河一档</a></li> 
+			<li onclick="itemBuss()"><a href="#">一企一档</a></li> 
 			<li><a href="#">一项一档</a></li> 
 			<li><a href="#">一项一档</a></li> 
 			<li><a href="#">一项一档</a></li> 
@@ -202,6 +202,7 @@
 	         );
 	
 	         let map = new Map("mapid", {
+				 showLabels: true,
 	             logo: false ,//logo
 	             isZoomSlider:false,
 	             extent:mapExtnt,
@@ -297,7 +298,18 @@
 	     }
 		 
 	 }
-	 
+   let itemRiver=function(){
+	require(["widget/ItemRiver"],function(ItemRiver){
+		 let itemRiver=new ItemRiver(); 
+		 itemRiver.intLayerRiver("itemRiverlayerid")
+     });
+   }
+   let itemBuss=function(){
+	require(["widget/ItemBuss"],function(ItemBuss){
+		 let itemBuss=new ItemBuss(); 
+		 itemBuss.intLayerBuss("itemBusslayerid")
+     });
+   }
    let intWidget=function(){
 	 //初始化图层求换组件
      require(["widget/MapManager"],function(MapManager){

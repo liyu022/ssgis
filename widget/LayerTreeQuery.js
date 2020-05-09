@@ -75,9 +75,7 @@ define(["dojo/_base/declare",
 	              }
 	        },
 	        addLayer:function(layerid,name,layerurl,id){
-	        	console.log(layerid);
         		 let featureLayer= MapAppconfig.map._layers[layerid];
-        		 console.log(featureLayer);
                  /*if(featureLayer.graphics.length>0){
      	        	 console.dir(name);
                 	 featureLayer.setDefinitionExpression("PRONAME = '"+name+"'");

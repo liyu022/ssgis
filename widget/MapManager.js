@@ -244,7 +244,7 @@ define(["dojo/_base/declare",
 			this.isDrawLine=false;
 			this.isDrawPoint=false;
 			this.isDrawPloygon=false;
-			// 
+			this.clearlayer();
 		 	var layerIndex = arrayUtil.indexOf(MapAppconfig.map.graphicsLayerIds, "vectTimeid");
 			if(layerIndex!=-1){
 				if(MapAppconfig.vectInter!=null){
@@ -255,6 +255,20 @@ define(["dojo/_base/declare",
 			}
 				
 			MapAppconfig.map.setMapCursor("default");
+		},
+		clearlayer:function(){
+			MapAppconfig.map.graphics.clear();
+			MapAppconfig.map.infoWindow.hide();
+			let itemRiverlayerIndex = arrayUtil.indexOf(MapAppconfig.map.graphicsLayerIds, "itemRiverlayerid");
+			if(itemRiverlayerIndex!=-1){
+				let itemRiverlayer=MapAppconfig.map._layers["itemRiverlayerid"];
+			    MapAppconfig.map.removeLayer(itemRiverlayer);
+			}
+			let itemBusslayerIndex = arrayUtil.indexOf(MapAppconfig.map.graphicsLayerIds, "itemBusslayerid");
+			if(itemBusslayerIndex!=-1){
+				let itemBusslayer=MapAppconfig.map._layers["itemBusslayerid"];
+			    MapAppconfig.map.removeLayer(itemBusslayer);
+			}
 		},
 		areaLable:function(result){
 			 var font =new Font("16px",Font.STYLE_NORMAL,Font.VARIANT_NORMAL,Font.WEIGHT_BOLDER);
