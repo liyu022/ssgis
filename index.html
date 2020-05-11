@@ -256,9 +256,9 @@
              });
 	 })};
 	 lickPro=function(name){
-		 require(["widget/LayerTreeQuery2"],function(LayerTreeQuery){
-			let layerTreeQuery=new LayerTreeQuery();
-			layerTreeQuery.queryLayerTree(name);
+		 require(["widget/ProjectInfo"],function(ProjectInfo){
+			let projectInfo=new ProjectInfo();
+			projectInfo.queryLayerTree(name);
 	      });
 	 };
 	 loadProjPoint=function(pointLayer){

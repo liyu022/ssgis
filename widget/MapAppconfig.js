@@ -4,19 +4,19 @@
 			xmpro:"http://113.140.66.230:18180/arcgis/rest/services/TCSSmap/MapServer",
 			
 			//ssym:"http://113.140.66.230:18180/arcgis/rest/services/TCYM/MapServer",
-			ssym:"http://192.168.2.39:6080/arcgis/rest/services/sstcbjx/MapServer",
+			ssym:"http://192.168.2.79:6080/arcgis/rest/services/sstcbjx/MapServer",
 			sssl:"http://113.140.66.226:33225/arcgis/rest/services/TDTSxBaseMap_XX/MapServer",
 			ssslbz:"http://113.140.66.226:33225/arcgis/rest/services/TDTSxBaseMap_LB/MapServer",
 			
 			ssyx:"http://113.140.66.226:33225/arcgis/rest/services/TDTSxImgMap/MapServer",
 //			ssyxbz:"http://113.140.66.226:33225/arcgis/rest/services/TDTSxBaseMap_LB/MapServer",
 //			ssyxdt:"http://localhost:6080/arcgis/rest/services/new_tcyx/MapServer",
-			ssyxdt:"http://192.168.2.39:6080/arcgis/rest/services/tcyxdt/MapServer",
+			ssyxdt:"http://192.168.2.79:6080/arcgis/rest/services/tcyxdt/MapServer",
 			ssdm:"http://113.140.66.226:33225/arcgis/rest/services/TDTSxShade/MapServer",
 			ssdmbz:"http://113.140.66.226:33225/arcgis/rest/services/TDTSxImgLabel/MapServer",
 			ssztbj:"http://113.140.66.230:18180/arcgis/rest/services/TCZTmap_new2/MapServer",
 			
-			styx:"http://192.168.2.39:6080/arcgis/rest/services/cjskyx/MapServer",
+			styx:"http://192.168.2.79:6080/arcgis/rest/services/cjskyx/MapServer",
 
 		mapExtent: {
 			wkid: 4326,
